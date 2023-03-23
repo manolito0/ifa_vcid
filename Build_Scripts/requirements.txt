@@ -1,0 +1,6 @@
+Flask
+waitress
+flask-restful
+passlib
+Flask-MySQLdb
+gunicorn

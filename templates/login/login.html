@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <title>Login | Pet Daycare</title>
+
+    <!---Custom CSS File--->
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/style.css') }}" />
+</head>
+
+<body>
+    <div class="container">
+        
+        <input type="checkbox" id="check" />
+
+        <div class="login form">
+            <header>Login</header>
+
+            <div style="margin-bottom: 10px;color: red;">
+                {{ wrong_credentials_msg }}
+            </div>
+
+            <form action="/do-login" method="post">
+                <input type="email" name="email" required placeholder="Email" />
+                <input type="password" name="password" required placeholder="Password" />
+
+                <!-- <a href="#">Forgot password?</a> -->
+                <input type="submit" class="button" value="Login" />
+            </form>
+
+            <div class="signup">
+                <span class="signup">
+                    <a href="/sign_up">Account erstellen</a>
+                </span>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

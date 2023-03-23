@@ -1,0 +1,144 @@
+# Pet Daycare
+# VCDI Praxisarbeit, Manuel Gerber, 03/2023
+
+### Python Installieren
+
+sudo apt install -y build-essential python3-setuptools python3-dev python3-pip virtualenv mariadb-server mariadb-client default-libmysqlclient-dev
+
+
+
+
+#### Neue Datenbank erstellen
+sudo mysql -u root
+create database DATABASE_NAME;
+
+
+##### Neuen User local access erstellen
+grant all privileges on DATABASE_NAME.* TO 'USER_NAME'@'localhost' identified by 'PASSWORD';
+
+
+#### Neuen User remote Access erstellen
+grant all privileges on DATABASE_NAME.* TO 'USER_NAME'@'%' identified by 'PASSWORD';
+
+
+#### Rechte erteilen
+flush privileges;
+
+
+#### Datenbank erstellen
+mysql -u root -p pet_daycare < pet_daycare.sql
+
+
+
+
+#### Python Umgebung initialisieren und aktivieren
+
+python3 -m venv venv
+source venv/bin/activate
+
+#### Requirements installieren (Siehe requirements.txt)
+
+pip install -r requirements.txt
+
+#### Datenbank Access konfigurieren
+
+nano helpers/db.py
+
+#### Applikation mit gunicorn starten
+
+gunicorn --bind :8080 server:app
+
+
+
+#### Service für Gunicorn erstellen
+
+sudo nano /etc/systemd/system/gunicorn.service
+
+
+#### Inhalt Gunicorn Service File
+
+[Unit]
+Description=gunicorn daemon for Pet Daycare
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/opt/websites/pet_daycare
+ExecStart=/opt/websites/pet_daycare/venv/bin/gunicorn \
+          --access-logfile /var/log/gunicorn/pet_daycare_access.log \
+           --error-logfile /var/log/gunicorn/pet_daycare_error.log \
+          --workers 3 \
+          --bind unix:/opt/websites/pet_daycare/uwsgi-pet_daycare.sock \
+          server:app
+
+[Install]
+WantedBy=multi-user.target
+
+
+sudo systemctl enable gunicorn.service --now
+sudo service gunicorn restart
+
+
+
+
+### NGINX Installieren
+
+
+sudo apt install -y nginx
+
+
+#### Virtualhost File erstellen
+
+sudo nano /etc/nginx/sites-available/pet_daycare
+
+
+#### Add the following code for the Nginx virtualhost for the reverse proxy
+
+## Gunicorn in NGING konfigurieren
+upstream uwsgi-pet_daycare {
+    server unix:/opt/websites/pet_daycare/uwsgi-pet_daycare.sock; # update the path for a file socket 
+    #server 127.0.0.1:8080; # for a web port socket
+}
+
+## Server Konfiguration
+
+##HTTP server block
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name example.com;    # substitute your machine's IP address or FQDN
+    #rewrite ^(.*) https://$host$1 permanent;
+    #return 301 https://example.com$request_uri;
+
+    # Add Proxy Headers
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forward-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Real-IP $remote_addr;
+    keepalive_timeout 5;
+
+    # Finally, send all non-media requests to the Django server.
+    location / {
+        include     uwsgi_params; # the uwsgi_params file you installed
+        uwsgi_pass  uwsgi-pet_daycare;
+        proxy_redirect off;
+    }
+
+    # log file location
+    access_log /var/log/nginx/pet_daycare_access.log;
+    error_log /var/log/nginx/pet_daycare_error.log;
+
+    #Enable gzip
+    gzip on;
+    gzip_types text/plain text/css text/less text/xml text/javascript application/javascript application/xml application/json application/xml+rss application/vnd.ms-fontobject application/x-font-ttf font/opentype image/svg+xml image/x-icon;
+}
+
+
+
+#### Aktivieren des VirtualHosts
+
+sudo ln -s /etc/nginx/sites-available/pet_daycare /etc/nginx/sites-enabled/
+
+

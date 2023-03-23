@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <title>Add new appointment | Pet Daycare</title>
+
+    <!---Custom CSS File--->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
+    <style>
+        table input {
+            max-width: 350px;
+        }
+
+        table th {
+            width: 40%;
+            text-align: right;
+        }
+
+        table th label {
+            margin-right: 10px;
+        }
+
+        table td {
+            width: 60%;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-3">
+
+        <div class="row">
+            <div class="col-12">
+
+                <h4 style="text-align: center;">
+                    Neuer Termin
+                </h4>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+
+                <form action="{{ action }}" method="post" class="text-center">
+                    <input type="hidden" name="id" value="{{ id }}" />
+
+                    <table class="table">
+                        <tr>
+                            <th>
+                                <label for="dog_name">Name Hund:</label>
+                            </th>
+                            <td>
+                                <input type="text" id="dog_name" name="dog_name" class="form-control" placeholder="Name Hund" required value="{{ data.dog_name }}" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                <label for="owner_name">Name Besitzer:</label>
+                            </th>
+                            <td>
+                                <input type="text" id="owner_name" name="owner_name" class="form-control" placeholder="Name Besitzer" required value="{{ data.owner_name }}" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                <label for="owner_address">Adresse Besitzer:</label>
+                            </th>
+                            <td>
+                                <input type="text" id="owner_address" name="owner_address" class="form-control" placeholder="Adresse Besitzer" required value="{{ data.owner_address }}" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                <label for="date_from">Datum von:</label>
+                            </th>
+                            <td>
+                                <input type="date" id="date_from" name="date_from" class="form-control" placeholder="Datum von" required value="{{ data.date_from }}" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                <label for="date_to">Datum bis:</label>
+                            </th>
+                            <td>
+                                <input type="date" id="date_to" name="date_to" class="form-control" placeholder="Datum bis" required value="{{ data.date_to }}" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                <label for="time_from">Zeit von:</label>
+                            </th>
+                            <td>
+                                <input type="time" id="time_from" name="time_from" class="form-control" placeholder="Zeit von" required value="{{ data.time_from }}" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                <label for="time_to">Zeit bis:</label>
+                            </th>
+                            <td>
+                                <input type="time" id="time_to" name="time_to" class="form-control" placeholder="Zeit bis" required value="{{ data.time_to }}" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                <label for="status">Status:</label>
+                            </th>
+                            <td>
+                                <select id="status" name="status" class="form-control" required>
+                                    <option value="New" {% if data.status == "New" %}selected{% endif %}>New</option>
+                                    <option value="In Progress" {% if data.status == "In Progress" %}selected{% endif %}>In Progress</option>
+                                    <option value="Completed" {% if data.status == "Completed" %}selected{% endif %}>Completed</option>
+                                    <option value="Cancelled" {% if data.status == "Cancelled" %}selected{% endif %}>Cancelled</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <input type="submit" value="Termin erstellen" class="btn btn-success" />
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

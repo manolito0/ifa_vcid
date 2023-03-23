@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <title>Home | Pet Daycare</title>
+
+    <!---Custom CSS File--->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container mt-3">
+
+        <div class="row">
+            <div class="col-12">
+
+                <h4 style="text-align: center;">
+                    Willkommen, {{ user_data.user_name }}
+                </h4>
+
+                <div class="menu-bar" style="text-align: center;">
+                    <a href="/add" class="btn btn-primary">
+                        Neuer Termin
+                    </a>
+
+                    <a href="/logout" class="btn btn-danger">
+                        Logout
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+
+                <div class="table-title">
+                    List of Appointments:
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th> Sl. </th>
+                                <th> Dog ID </th>
+                                <th> Name Hund </th>
+                                <th> Name Besitzer </th>
+                                <th> Adresse Besitzer </th>
+                                <th> Erstellt von </th>
+
+                                <th> Datum von </th>
+                                <th> Datum bis </th>
+                                <th> Zeit von </th>
+                                <th> Zeit bis </th>
+
+                                <th> Status </th>
+
+                                <th> Aktionen </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for job in jobs %}
+                                <tr>
+                                    <td> {{ loop.index }}. </td>
+                                    <td> JN-{{ job.job_id }} </td>
+                                    <td> {{ job.dog_name }} </td>
+                                    <td> {{ job.owner_name }} </td>
+                                    <td> {{ job.owner_address }} </td>
+                                    <td> {{ job.user_name }} </td>
+
+                                    <td> {{ job.date_from }} </td>
+                                    <td> {{ job.date_to }} </td>
+                                    <td> {{ job.time_from }} </td>
+                                    <td> {{ job.time_to }} </td>
+
+                                    <td> {{ job.status }} </td>
+
+                                    <td>
+                                        <a href="/edit/{{ job.job_id  }}" class="btn btn-warning">Bearbeiten</a>
+                                        <a href="/delete/{{ job.job_id  }}" class="btn btn-danger">Löschen</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
